@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+import seaborn as sns
 import matplotlib.pyplot as plt
 
 np.random.seed(123)
@@ -62,34 +63,48 @@ def run_simulation(obj, steps):
 
     return pd.DataFrame(data)
 
-def plot_simulation(smoke_data):
-    """Plot simulation results for Smoke."""
-    time = smoke_data['step']
-
-    # Create a figure with multiple subplots
+def plot_simulation_seaborn(smoke_data):
+    """Plot simulation results using Seaborn for Smoke."""
+    sns.set(style="whitegrid")
     fig, axs = plt.subplots(3, 2, figsize=(12, 10))
     fig.suptitle('Smoke Simulation - Position and Velocity', fontsize=16)
 
-    # Plot position for Smoke
-    axs[0, 0].plot(time, smoke_data['x'], label='x (Smoke)', color='blue')
-    axs[0, 0].set_title('Smoke - x Position')
+    # Position plots
+    sns.lineplot(x='step', y='x', data=smoke_data, ax=axs[0, 0], color='blue')
+    axs[0, 0].set_title('x Position')
     axs[0, 0].set_xlabel('Step')
     axs[0, 0].set_ylabel('x')
 
-    axs[1, 0].plot(time, smoke_data['y'], label='y (Smoke)', color='green')
-    axs[1, 0].set_title('Smoke - y Position')
+    sns.lineplot(x='step', y='y', data=smoke_data, ax=axs[1, 0], color='green')
+    axs[1, 0].set_title('y Position')
     axs[1, 0].set_xlabel('Step')
     axs[1, 0].set_ylabel('y')
 
-    axs[2, 0].plot(time, smoke_data['z'], label='z (Smoke)', color='red')
-    axs[2, 0].set_title('Smoke - z Position')
+    sns.lineplot(x='step', y='z', data=smoke_data, ax=axs[2, 0], color='red')
+    axs[2, 0].set_title('z Position')
     axs[2, 0].set_xlabel('Step')
     axs[2, 0].set_ylabel('z')
+
+    # Velocity plots
+    sns.lineplot(x='step', y='vx', data=smoke_data, ax=axs[0, 1], color='purple')
+    axs[0, 1].set_title('x Velocity')
+    axs[0, 1].set_xlabel('Step')
+    axs[0, 1].set_ylabel('vx')
+
+    sns.lineplot(x='step', y='vy', data=smoke_data, ax=axs[1, 1], color='orange')
+    axs[1, 1].set_title('y Velocity')
+    axs[1, 1].set_xlabel('Step')
+    axs[1, 1].set_ylabel('vy')
+
+    sns.lineplot(x='step', y='vz', data=smoke_data, ax=axs[2, 1], color='brown')
+    axs[2, 1].set_title('z Velocity')
+    axs[2, 1].set_xlabel('Step')
+    axs[2, 1].set_ylabel('vz')
 
     plt.tight_layout(rect=[0, 0, 1, 0.95])
     plt.show()
 
-# Create objects for Smoke and HeavySmoke
+# Create objects for Smoke
 average_smoke = Smoke()
 
 # Run the simulation for 100 steps
@@ -100,4 +115,5 @@ smoke_data = run_simulation(average_smoke, steps)
 print("Smoke Data Overview:")
 print(smoke_data.describe())
 
-plot_simulation(smoke_data)
+# Plot simulation using seaborn
+plot_simulation_seaborn(smoke_data)
