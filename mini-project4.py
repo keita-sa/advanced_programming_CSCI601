@@ -8,7 +8,8 @@ image = io.imread('input_image.jpg')  # Replace with your image path
 print(type(image))                    # Check the type of the image, it should be a NumPy array
 
 # Step 2: Apply a Gaussian blur filter using SciPy
-blurred_image = ndimage.gaussian_filter(image, sigma=1) # The standard deviation of the filter determines how blurred the image is (larger values = more blur).
+# The standard deviation of the filter determines how blurred the image is (larger values = more blur).
+blurred_image = ndimage.gaussian_filter(image, sigma=1)
 
 # Step 3: Save the processed image back to a file
 io.imsave('output_image.jpg', blurred_image)
