@@ -1,6 +1,10 @@
 import pandas as pd
 import numpy as np
 
+from sklearn.decomposition import PCA
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import StandardScaler
+
 
 def handle_missing_values(data: pd.DataFrame) -> pd.DataFrame:
     """
@@ -83,3 +87,35 @@ def encode_categorical_data(data: pd.DataFrame) -> pd.DataFrame:
     categorical_cols = data.select_dtypes(include=['object', 'category']).columns
     data = pd.get_dummies(data, columns=categorical_cols, drop_first=True)
     return data
+
+
+def remove_highly_correlated_features(df, threshold=0.9):
+    corr_matrix = df.corr()
+    upper_triangle = corr_matrix.where(np.triu(np.ones(corr_matrix.shape), k=1).astype(bool))
+    to_drop = [column for column in upper_triangle.columns if any(upper_triangle[column] > threshold)]
+    return df.drop(columns=to_drop)
+
+
+def standardize_data(df):
+    scaler = StandardScaler()
+    df_scaled = pd.DataFrame(scaler.fit_transform(df), columns=df.columns)
+    return df_scaled
+
+
+def reduce_dimensions(df, n_components=2):
+    pca = PCA(n_components=n_components)
+    df_reduced = pca.fit_transform(df)
+    return pd.DataFrame(df_reduced, columns=[f'PC{i+1}' for i in range(n_components)])
+
+
+def create_pipeline():
+    pipeline = Pipeline([
+        ('missing_values', handle_missing_values),
+        ('scaling', StandardScaler()),
+        ('normalization', normalize_data)
+    ])
+
+    return pipeline
+
+
+
